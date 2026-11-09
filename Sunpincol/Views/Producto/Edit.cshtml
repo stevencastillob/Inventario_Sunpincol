@@ -34,6 +34,16 @@
                 <span asp-validation-for="Precio" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Descripcion" class="control-label"></label>
+                <input asp-for="Descripcion" class="form-control" />
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="guia" class="control-label"></label>
+                <input asp-for="guia" class="form-control" />
+                <span asp-validation-for="guia" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="edit" class="btn btn-primary" />
             </div>
         </form>

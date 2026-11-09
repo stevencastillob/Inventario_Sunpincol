@@ -29,10 +29,17 @@ public partial class BDSunpincolContext : DbContext
 
             entity.ToTable("Producto");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Categoria)
                 .HasMaxLength(50)
                 .HasColumnName("categoria");
+            entity.Property(e => e.Descripcion)
+                .HasMaxLength(50)
+                .HasColumnName("Descripcion");
+
+            entity.Property(e => e.guia)
+                .HasMaxLength(50)
+                .HasColumnName("guia");
             entity.Property(e => e.Nombre)
                 .HasMaxLength(50)
                 .HasColumnName("nombre");
