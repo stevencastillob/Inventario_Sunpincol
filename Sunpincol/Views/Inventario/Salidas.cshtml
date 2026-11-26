@@ -1,0 +1,115 @@
+﻿
+@using Sunpincol.Models
+
+@{
+    ViewData["Title"] = "Registro de salidas";
+
+    var sedes = ViewBag.Sedes as List<Sede> ?? new List<Sede>();
+    var productos = ViewBag.Productos as List<Producto> ?? new List<Producto>();
+}
+
+<h2>Registro de salidas y ventas</h2>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-info mt-3">
+        @TempData["Mensaje"]
+    </div>
+}
+
+<h4 class="mt-4">Seleccionar sede</h4>
+
+<form asp-controller="Inventario" asp-action="Salidas" method="get">
+    <div class="mb-3">
+        <label class="form-label">Sede</label>
+
+        <select name="idSede" class="form-select" required>
+            <option value="">Seleccione una sede</option>
+
+            @foreach (var sede in sedes)
+            {
+                <option value="@sede.IdSede"
+                        selected="@(ViewBag.IdSedeSeleccionada == sede.IdSede)">
+                    @sede.NombreSede
+                </option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Consultar productos
+    </button>
+</form>
+
+@if (ViewBag.IdSedeSeleccionada != null)
+{
+    <hr class="my-4" />
+
+    <h4>Existencias disponibles</h4>
+
+    @if (ViewBag.Inventarios != null)
+    {
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Código</th>
+                    <th>Stock actual</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ViewBag.Inventarios)
+                {
+                    <tr>
+                        <td>@item.NombreProducto</td>
+                        <td>@item.CodigoProducto</td>
+                        <td>@item.StockActual</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    <h4 class="mt-4">Registrar salida o venta</h4>
+
+    @if (productos.Count > 0)
+    {
+        <form asp-controller="Inventario" asp-action="RegistrarSalida" method="post">
+
+            <input type="hidden" name="idSede"
+                   value="@ViewBag.IdSedeSeleccionada" />
+
+            <div class="mb-3">
+                <label class="form-label">Producto</label>
+
+                <select name="codigoProducto" class="form-select" required>
+                    <option value="">Seleccione un producto</option>
+
+                    @foreach (var producto in productos)
+                    {
+                        <option value="@producto.CodigoProducto">
+                            @producto.NombreProducto
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Cantidad de salida</label>
+                <input type="number" name="cantidad"
+                       class="form-control" min="1" required />
+            </div>
+
+            <button type="submit" class="btn btn-success">
+                Confirmar salida
+            </button>
+
+        </form>
+    }
+    else
+    {
+        <div class="alert alert-warning">
+            Esta sede no tiene productos registrados en su inventario.
+        </div>
+    }
+}

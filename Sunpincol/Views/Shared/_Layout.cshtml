@@ -20,9 +20,46 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
+
+
+
+
+
+
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Producto" asp-action="index">Gestion de productos</a>
                         </li>
+                       <li class="nav-item">
+    <a class="nav-link text-dark" asp-controller="Inventario" asp-action="Index">
+        Consulta de stock
+    </a>
+</li>
+
+<li class="nav-item">
+    <a class="nav-link text-dark" asp-controller="Inventario" asp-action="Entradas">
+        Registro de entradas
+    </a>
+</li>
+<li class="nav-item">
+    <a class="nav-link text-dark" asp-controller="Inventario" asp-action="Salidas">
+        Registro de salidas
+    </a>
+</li>
+<li class="nav-item">
+    <a class="nav-link text-dark" asp-controller="Inventario" asp-action="Ajustes">
+        Ajuste manual de existencias
+    </a>
+</li>   
+
+<li class="nav-item">
+    <a class="nav-link text-dark" asp-controller="Inventario" asp-action="StockGeneral">
+        Stock de todas las sedes
+    </a>
+</li>
+
+
+
+
                     </ul>
                 </div>
             </div>

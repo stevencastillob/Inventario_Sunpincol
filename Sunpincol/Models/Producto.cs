@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-
+﻿
 namespace Sunpincol.Models;
 
-public partial class Producto
+public class Producto
 {
-    public int Id { get; set; }
+    public string CodigoProducto { get; set; } = null!;
 
-    public string? Nombre { get; set; }
+    public string NombreProducto { get; set; } = null!;
 
-    public int? Stock { get; set; }
+    public string Categoria { get; set; } = null!;
 
-    public string? Categoria { get; set; }
+    public string Descripcion { get; set; } = null!;
 
-    public int? Precio { get; set; }
-    public string? Descripcion { get; set; }
-    public string? guia { get; set; }
+    public decimal PrecioUnitario { get; set; }
+
+    public bool EstadoProducto { get; set; }
 }

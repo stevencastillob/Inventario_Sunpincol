@@ -1,0 +1,112 @@
+﻿
+drop table if exists Cambios;
+drop table if exists Inconsistencia;
+drop table if exists Inventario;
+drop table if exists Guia;
+drop table if exists Catalogo;
+drop table if exists Jefe;
+drop table if exists Empleado;
+drop table if exists InventarioSede;
+drop table if exists Producto;
+drop table if exists Productos;
+drop table if exists Sede;
+drop table if exists Usuario;
+
+create table Usuario (
+    idUsuario int identity(1,1) primary key,
+    nombre varchar(100) not null,
+    correo varchar(120) not null,
+    contrasena varchar(255) not null,
+    rol varchar(50) not null,
+    estadoActivo bit not null
+);
+
+create table Sede (
+    idSede int identity(1,1) primary key,
+    nombreSede varchar(80) not null,
+    estadoSede varchar(20) not null
+);
+
+create table Producto (
+    codigoProducto varchar(30) primary key,
+    nombreProducto varchar(100) not null,
+    categoria varchar(60) not null,
+    descripcion varchar(255) not null,
+    precioUnitario decimal(12,2) not null,
+    estadoProducto bit not null
+);
+
+create table Empleado (
+    idEmpleado int primary key,
+    idSedeAsignada int not null,
+    cargo varchar(60) not null,
+    turno varchar(30) not null,
+    foreign key (idEmpleado) references Usuario(idUsuario),
+    foreign key (idSedeAsignada) references Sede(idSede)
+);
+
+create table Jefe (
+    idJefe int identity(1,1) primary key,
+    idEmpleado int not null,
+    areaSupervision varchar(80) not null,
+    nivelAutorizacion numeric(2,0) not null,
+    foreign key (idEmpleado) references Empleado(idEmpleado)
+);
+
+create table Catalogo (
+    idCatalogo int identity(1,1) primary key,
+    idSede int not null,
+    fechaGeneracion datetime2 not null,
+    totalProductosActivos int not null,
+    foreign key (idSede) references Sede(idSede)
+);
+
+create table Guia (
+    idGuia int identity(1,1) primary key,
+    idSedeOrigen int not null,
+    idSedeDestino int not null,
+    referenciaGuia varchar(50) not null,
+    fechaEmision datetime2 not null,
+    estadoGuia varchar(30) not null,
+    foreign key (idSedeOrigen) references Sede(idSede),
+    foreign key (idSedeDestino) references Sede(idSede)
+);
+
+create table Inventario (
+    idInventario int identity(1,1) primary key,
+    idSede int not null,
+    codigoProducto varchar(30) not null,
+    stockActual int not null,
+    stockMinimo int not null,
+    fechaUltimaActualizacion datetime2 not null,
+    foreign key (idSede) references Sede(idSede),
+    foreign key (codigoProducto) references Producto(codigoProducto)
+);
+
+create table Inconsistencia (
+    idInconsistencia int identity(1,1) primary key,
+    idSede int not null,
+    codigoProducto varchar(30) not null,
+    idGuia int not null,
+    cantidadSistema int not null,
+    cantidadFisica int not null,
+    diferencia int not null,
+    observacion varchar(255) not null,
+    estadoReporte varchar(30) not null,
+    fechaReporte datetime2 not null,
+    foreign key (idSede) references Sede(idSede),
+    foreign key (codigoProducto) references Producto(codigoProducto),
+    foreign key (idGuia) references Guia(idGuia)
+);
+
+create table Cambios (
+    idCambio int identity(1,1) primary key,
+    idInventario int not null,
+    idUsuarioResponsable int not null,
+    cantidadAnterior int not null,
+    cantidadNueva int not null,
+    motivoCambio varchar(200) not null,
+    fechaCambio datetime2 not null,
+    foreign key (idInventario) references Inventario(idInventario),
+    foreign key (idUsuarioResponsable) references Usuario(idUsuario)
+);

@@ -1,0 +1,75 @@
+﻿
+@using Sunpincol.Models
+
+@{
+    ViewData["Title"] = "Consulta de stock";
+
+    var sedes = ViewBag.Sedes as List<Sede> ?? new List<Sede>();
+    var productos = ViewBag.Productos as List<Producto> ?? new List<Producto>();
+}
+
+<h2>Consulta de stock por sede</h2>
+
+<form asp-controller="Inventario" asp-action="Index" method="get">
+
+    <div class="mb-3">
+        <label class="form-label">Seleccione una sede</label>
+
+        <select name="idSede" class="form-select" required>
+            <option value="">Seleccione una sede</option>
+
+            @foreach (var sede in sedes)
+            {
+                <option value="@sede.IdSede"
+                        selected="@(ViewBag.IdSedeSeleccionada == sede.IdSede)">
+                    @sede.NombreSede
+                </option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Seleccione un producto</label>
+
+        <select name="codigoProducto" class="form-select" required>
+            <option value="">Seleccione un producto</option>
+
+            @foreach (var producto in productos)
+            {
+                <option value="@producto.CodigoProducto"
+                        selected="@(ViewBag.CodigoProductoSeleccionado == producto.CodigoProducto)">
+                    @producto.NombreProducto
+                </option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Consultar stock
+    </button>
+
+</form>
+
+@if (ViewBag.Mensaje != null)
+{
+    <div class="alert alert-warning mt-4">
+        @ViewBag.Mensaje
+    </div>
+}
+
+@if (ViewBag.Resultado != null)
+{
+    <div class="card mt-4">
+        <div class="card-header">
+            Resultado de la consulta
+        </div>
+
+        <div class="card-body">
+            <p><strong>Sede:</strong> @ViewBag.Resultado.NombreSede</p>
+            <p><strong>Producto:</strong> @ViewBag.Resultado.NombreProducto</p>
+            <p><strong>Stock disponible:</strong> @ViewBag.Resultado.StockActual</p>
+            <p><strong>Stock mínimo:</strong> @ViewBag.Resultado.StockMinimo</p>
+            <p><strong>Última actualización:</strong> @ViewBag.Resultado.FechaUltimaActualizacion</p>
+        </div>
+    </div>
+}

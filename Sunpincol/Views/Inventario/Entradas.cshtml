@@ -1,0 +1,101 @@
+﻿
+@using Sunpincol.Models
+
+@{
+    ViewData["Title"] = "Registro de entradas";
+
+    var sedes = ViewBag.Sedes as List<Sede> ?? new List<Sede>();
+    var productos = ViewBag.Productos as List<Producto> ?? new List<Producto>();
+}
+
+<h2>Registro de entradas de mercancía</h2>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-info">
+        @TempData["Mensaje"]
+    </div>
+}
+
+<h4 class="mt-4">Registrar guía de despacho</h4>
+
+<form asp-controller="Inventario" asp-action="RegistrarGuia" method="post">
+
+    <div class="mb-3">
+        <label class="form-label">Sede de origen</label>
+        <select name="idSedeOrigen" class="form-select" required>
+            <option value="">Seleccione la sede de origen</option>
+            @foreach (var sede in sedes)
+            {
+                <option value="@sede.IdSede">@sede.NombreSede</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Sede de destino</label>
+        <select name="idSedeDestino" class="form-select" required>
+            <option value="">Seleccione la sede de destino</option>
+            @foreach (var sede in sedes)
+            {
+                <option value="@sede.IdSede">@sede.NombreSede</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Referencia de la guía</label>
+        <input type="text" name="referenciaGuia" class="form-control" maxlength="50" required />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Fecha de emisión</label>
+        <input type="date" name="fechaEmision" class="form-control" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Registrar guía
+    </button>
+
+</form>
+
+<hr class="my-4" />
+
+<h4>Registrar producto recibido</h4>
+
+<form asp-controller="Inventario" asp-action="RegistrarEntrada" method="post">
+
+    <div class="mb-3">
+        <label class="form-label">Sede que recibe la mercancía</label>
+        <select name="idSede" class="form-select" required>
+            <option value="">Seleccione una sede</option>
+            @foreach (var sede in sedes)
+            {
+                <option value="@sede.IdSede">@sede.NombreSede</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Producto</label>
+        <select name="codigoProducto" class="form-select" required>
+            <option value="">Seleccione un producto</option>
+            @foreach (var producto in productos)
+            {
+                <option value="@producto.CodigoProducto">
+                    @producto.NombreProducto
+                </option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Cantidad recibida</label>
+        <input type="number" name="cantidad" class="form-control" min="1" required />
+    </div>
+
+    <button type="submit" class="btn btn-success">
+        Registrar entrada
+    </button>
+
+</form>

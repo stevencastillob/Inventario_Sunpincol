@@ -1,0 +1,100 @@
+﻿@{
+    ViewData["Title"] = "Ajuste manual de existencias";
+}
+
+<h2>Ajuste manual de existencias</h2>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-success">@TempData["Mensaje"]</div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<h4>Seleccionar sede</h4>
+
+<form asp-action="Ajustes" method="get" class="mb-4">
+    <div class="mb-3">
+        <label class="form-label">Sede</label>
+        <select name="idSede" class="form-select" required>
+            <option value="">Seleccione una sede</option>
+            @foreach (var sede in ViewBag.Sedes)
+            {
+                <option value="@sede.IdSede" selected="@(ViewBag.IdSedeSeleccionada == sede.IdSede)">
+                    @sede.NombreSede
+                </option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Consultar existencias</button>
+</form>
+
+@if (ViewBag.IdSedeSeleccionada != null)
+{
+    <h4>Existencias actuales</h4>
+
+    @if (ViewBag.Inventarios.Count > 0)
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Código</th>
+                    <th>Stock actual</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var inventario in ViewBag.Inventarios)
+                {
+                    <tr>
+                        <td>@inventario.NombreProducto</td>
+                        <td>@inventario.CodigoProducto</td>
+                        <td>@inventario.StockActual</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <hr />
+
+        <h4>Registrar ajuste</h4>
+
+        <form asp-action="RegistrarAjuste" method="post">
+            <input type="hidden" name="idSede" value="@ViewBag.IdSedeSeleccionada" />
+
+            <div class="mb-3">
+                <label class="form-label">Producto</label>
+                <select name="codigoProducto" class="form-select" asp-items="ViewBag.Productos" required>
+                    <option value="">Seleccione un producto</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Nueva cantidad</label>
+                <input type="number" name="cantidadNueva" class="form-control" min="0" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Motivo del ajuste</label>
+                <textarea name="motivoCambio" class="form-control" required></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Empleado responsable</label>
+                <select name="idUsuarioResponsable" class="form-select" asp-items="ViewBag.Usuarios" required>
+                    <option value="">Seleccione un empleado</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-success">Registrar ajuste</button>
+        </form>
+    }
+    else
+    {
+        <p>No hay productos registrados en el inventario de esta sede.</p>
+    }
+}

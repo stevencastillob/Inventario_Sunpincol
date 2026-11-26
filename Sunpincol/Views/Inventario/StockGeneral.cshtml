@@ -1,0 +1,40 @@
+﻿@{
+    ViewData["Title"] = "Stock de todas las sedes";
+}
+
+<h2>Stock de todas las sedes</h2>
+
+<p>Consulta las existencias de productos registradas en cada sede.</p>
+
+@if (ViewBag.Inventarios.Count > 0)
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Sede</th>
+                <th>Producto</th>
+                <th>Código</th>
+                <th>Stock actual</th>
+                <th>Stock mínimo</th>
+                <th>Última actualización</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var inventario in ViewBag.Inventarios)
+            {
+                <tr>
+                    <td>@inventario.NombreSede</td>
+                    <td>@inventario.NombreProducto</td>
+                    <td>@inventario.CodigoProducto</td>
+                    <td>@inventario.StockActual</td>
+                    <td>@inventario.StockMinimo</td>
+                    <td>@inventario.FechaUltimaActualizacion</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No hay existencias registradas en las sedes.</p>
+}

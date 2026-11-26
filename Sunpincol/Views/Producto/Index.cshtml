@@ -1,65 +1,44 @@
+
 @model IEnumerable<Sunpincol.Models.Producto>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Productos";
 }
 
-<h1>Gestion de productos</h1>
+<h1>Productos</h1>
 
 <p>
-    <a asp-action="Create">Crear nuevo Producto</a>
+    <a asp-action="Create" class="btn btn-primary">Crear nuevo producto</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Stock)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Categoria)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Precio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descripcion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.guia)
-            </th>
-            <th></th>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Categoría</th>
+            <th>Precio unitario</th>
+            <th>Descripción</th>
+            <th>Estado</th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(model => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Stock)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Categoria)
-                </td>
+        @foreach (var producto in Model)
+        {
+            <tr>
+                <td>@producto.CodigoProducto</td>
+                <td>@producto.NombreProducto</td>
+                <td>@producto.Categoria</td>
+                <td>@producto.PrecioUnitario.ToString("N2")</td>
+                <td>@producto.Descripcion</td>
+                <td>@(producto.EstadoProducto ? "Activo" : "Inactivo")</td>
                 <td>
-                    @Html.DisplayFor(model => item.Precio)
+                    <a asp-action="Edit" asp-route-id="@producto.CodigoProducto">Editar</a> |
+                    <a asp-action="Details" asp-route-id="@producto.CodigoProducto">Detalles</a> |
+                    <a asp-action="Delete" asp-route-id="@producto.CodigoProducto">Eliminar</a>
                 </td>
-                <td>
-                    @Html.DisplayFor(model => item.Descripcion)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => item.guia)
-                </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Detalles</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Eliminar</a>
-            </td>
-        </tr>
-}
+            </tr>
+        }
     </tbody>
 </table>
