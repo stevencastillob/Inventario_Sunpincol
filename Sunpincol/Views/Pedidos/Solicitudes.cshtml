@@ -1,0 +1,71 @@
+﻿
+@{
+    ViewData["Title"] = "Solicitudes de pedidos";
+}
+
+<h2>Solicitudes pendientes</h2>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-info">
+        @TempData["Mensaje"]
+    </div>
+}
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.Error
+    </div>
+}
+else
+{
+    @if (ViewBag.Pedidos.Count == 0)
+    {
+        <div class="alert alert-info">
+            No hay solicitudes pendientes.
+        </div>
+    }
+    else
+    {
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Pedido</th>
+                    <th>Sede</th>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ViewBag.Pedidos)
+                {
+                    <tr>
+                        <td>@item.Pedido.IdPedido</td>
+                        <td>@item.Sede</td>
+                        <td>@item.Producto</td>
+                        <td>@item.Pedido.CantidadSolicitada</td>
+                        <td>@item.Pedido.FechaSolicitud.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            <form asp-controller="Pedidos" asp-action="GestionarPedido" method="post">
+                                <input type="hidden" name="idPedido" value="@item.Pedido.IdPedido" />
+                                <input type="hidden" name="idBodeguero" value="@ViewBag.IdBodeguero" />
+
+                                <button type="submit" name="aprobar" value="true" class="btn btn-success btn-sm">
+                                    Aprobar
+                                </button>
+
+                                <button type="submit" name="aprobar" value="false" class="btn btn-danger btn-sm">
+                                    Rechazar
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+    

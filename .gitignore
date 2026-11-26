@@ -361,3 +361,10 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Incluir la base de datos del proyecto
+!**/[Bb]in/
+!**/[Dd]ebug/
+!**/net10.0/
+!**/BDSunpincol.mdf
+!**/BDSunpincol_log.ldf

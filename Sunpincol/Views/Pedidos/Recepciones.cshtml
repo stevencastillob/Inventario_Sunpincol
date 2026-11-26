@@ -1,0 +1,78 @@
+﻿@{
+    ViewData["Title"] = "Confirmación de recepción";
+}
+
+<h2>Envíos pendientes de recepción</h2>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-info">
+        @TempData["Mensaje"]
+    </div>
+}
+
+@if (ViewBag.Pedidos.Count == 0)
+{
+    <div class="alert alert-info">
+        No hay envíos pendientes de recepción.
+    </div>
+}
+else
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Pedido</th>
+                <th>Guía</th>
+                <th>Sede</th>
+                <th>Cantidad enviada</th>
+                <th>Fecha de envío</th>
+                <th>Confirmar recepción</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ViewBag.Pedidos)
+            {
+                <tr>
+                    <td>@item.Pedido.IdPedido</td>
+                    <td>@item.Guia.NumeroGuia</td>
+                    <td>@item.Sede</td>
+                    <td>@item.Pedido.CantidadSolicitada</td>
+                    <td>@item.Guia.FechaEmision.ToString("dd/MM/yyyy")</td>
+                    <td>
+                        <form asp-controller="Pedidos" asp-action="RegistrarRecepcion" method="post">
+                            <input type="hidden" name="idPedido" value="@item.Pedido.IdPedido" />
+                            <input type="hidden" name="idGuiaDespacho" value="@item.Guia.IdGuiaDespacho" />
+
+                            <label>Empleado receptor</label>
+                            <select name="idEmpleadoReceptor" class="form-select mb-2" required>
+                                <option value="">Seleccionar empleado</option>
+                                @foreach (var empleado in ViewBag.Empleados)
+                                {
+                                    if (empleado.IdSedeAsignada == item.Pedido.IdSedeSolicitante)
+                                    {
+                                        <option value="@empleado.IdEmpleado">
+                                            Empleado @empleado.IdEmpleado
+                                        </option>
+                                    }
+                                }
+                            </select>
+
+                            <label>Cantidad recibida</label>
+                            <input type="number"
+                                   name="cantidadRecibida"
+                                   class="form-control mb-2"
+                                   min="1"
+                                   value="@item.Pedido.CantidadSolicitada"
+                                   required />
+
+                            <button type="submit" class="btn btn-success btn-sm">
+                                Confirmar recepción
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

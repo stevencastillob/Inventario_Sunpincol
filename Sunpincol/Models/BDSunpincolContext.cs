@@ -24,8 +24,15 @@ public partial class BDSunpincolContext : DbContext
     public virtual DbSet<Cambio> Cambios { get; set; }
     public virtual DbSet<Usuario> Usuarios { get; set; }
 
+    public virtual DbSet<Pedido> Pedidos { get; set; }
 
+    public virtual DbSet<Empleado> Empleados { get; set; }
 
+    public virtual DbSet<Bodeguero> Bodegueros { get; set; }
+    public virtual DbSet<Historial> Historiales { get; set; }
+
+    public virtual DbSet<GuiaDespacho> GuiasDespacho { get; set; }
+    public virtual DbSet<Recepcion> Recepciones { get; set; }
 
 
 
@@ -151,6 +158,100 @@ public partial class BDSunpincolContext : DbContext
             entity.Property(e => e.Rol).HasColumnName("rol");
             entity.Property(e => e.EstadoActivo).HasColumnName("estadoActivo");
         });
+
+        modelBuilder.Entity<Pedido>(entity =>
+        {
+            entity.HasKey(e => e.IdPedido);
+
+            entity.ToTable("Pedido");
+
+            entity.Property(e => e.IdPedido).HasColumnName("idPedido");
+            entity.Property(e => e.IdSedeSolicitante).HasColumnName("idSedeSolicitante");
+            entity.Property(e => e.IdEmpleadoSolicitante).HasColumnName("idEmpleadoSolicitante");
+            entity.Property(e => e.CodigoProducto).HasColumnName("codigoProducto").HasMaxLength(30).IsUnicode(false);
+            entity.Property(e => e.CantidadSolicitada).HasColumnName("cantidadSolicitada");
+            entity.Property(e => e.EstadoPedido).HasColumnName("estadoPedido").HasMaxLength(30).IsUnicode(false);
+            entity.Property(e => e.FechaSolicitud).HasColumnName("fechaSolicitud");
+
+            entity.HasOne<Sede>().WithMany().HasForeignKey(e => e.IdSedeSolicitante);
+            entity.HasOne<Empleado>().WithMany().HasForeignKey(e => e.IdEmpleadoSolicitante);
+            entity.HasOne<Producto>().WithMany().HasForeignKey(e => e.CodigoProducto);
+        });
+
+        modelBuilder.Entity<Empleado>(entity =>
+        {
+            entity.HasKey(e => e.IdEmpleado);
+            entity.ToTable("Empleado");
+            entity.Property(e => e.IdEmpleado).HasColumnName("idEmpleado");
+            entity.Property(e => e.IdSedeAsignada).HasColumnName("idSedeAsignada");
+            entity.Property(e => e.Cargo).HasColumnName("cargo").HasMaxLength(50).IsUnicode(false);
+            entity.Property(e => e.Turno).HasColumnName("turno").HasMaxLength(30).IsUnicode(false);
+            entity.HasOne<Usuario>().WithMany().HasForeignKey(e => e.IdEmpleado);
+            entity.HasOne<Sede>().WithMany().HasForeignKey(e => e.IdSedeAsignada);
+        });
+
+        modelBuilder.Entity<Bodeguero>(entity =>
+        {
+            entity.HasKey(e => e.IdBodeguero);
+            entity.ToTable("Bodeguero");
+            entity.Property(e => e.IdBodeguero).HasColumnName("idBodeguero");
+            entity.Property(e => e.IdEmpleado).HasColumnName("idEmpleado");
+            entity.Property(e => e.IdBodegaAsignada).HasColumnName("idBodegaAsignada");
+            entity.Property(e => e.ZonaAlmacenamiento).HasColumnName("zonaAlmacenamiento").HasMaxLength(60).IsUnicode(false);
+            entity.Property(e => e.Turno).HasColumnName("turno").HasMaxLength(30).IsUnicode(false);
+            entity.HasOne<Empleado>().WithMany().HasForeignKey(e => e.IdEmpleado);
+            entity.HasOne<Sede>().WithMany().HasForeignKey(e => e.IdBodegaAsignada);
+        });
+
+        modelBuilder.Entity<Historial>(entity =>
+        {
+            entity.HasKey(e => e.IdHistorial);
+            entity.ToTable("Historial");
+            entity.Property(e => e.IdHistorial).HasColumnName("idHistorial");
+            entity.Property(e => e.IdPedido).HasColumnName("idPedido");
+            entity.Property(e => e.IdUsuarioResponsable).HasColumnName("idUsuarioResponsable");
+            entity.Property(e => e.EstadoAnterior).HasColumnName("estadoAnterior").HasMaxLength(30).IsUnicode(false);
+            entity.Property(e => e.EstadoActual).HasColumnName("estadoActual").HasMaxLength(30).IsUnicode(false);
+            entity.Property(e => e.FechaRegistro).HasColumnName("fechaRegistro");
+            entity.HasOne<Pedido>().WithMany().HasForeignKey(e => e.IdPedido);
+            entity.HasOne<Usuario>().WithMany().HasForeignKey(e => e.IdUsuarioResponsable);
+        });
+
+        modelBuilder.Entity<GuiaDespacho>(entity =>
+        {
+            entity.HasKey(e => e.IdGuiaDespacho);
+            entity.ToTable("GuiaDespacho");
+            entity.Property(e => e.IdGuiaDespacho).HasColumnName("idGuiaDespacho");
+            entity.Property(e => e.IdPedido).HasColumnName("idPedido");
+            entity.Property(e => e.IdBodegueroEmisor).HasColumnName("idBodegueroEmisor");
+            entity.Property(e => e.NumeroGuia).HasColumnName("numeroGuia").HasMaxLength(50).IsUnicode(false);
+            entity.Property(e => e.FechaEmision).HasColumnName("fechaEmision");
+            entity.Property(e => e.EstadoEntrega).HasColumnName("estadoEntrega").HasMaxLength(30).IsUnicode(false);
+
+            entity.HasOne<Pedido>().WithMany().HasForeignKey(e => e.IdPedido);
+            entity.HasOne<Bodeguero>().WithMany().HasForeignKey(e => e.IdBodegueroEmisor);
+        });
+
+        modelBuilder.Entity<Recepcion>(entity =>
+        {
+            entity.HasKey(e => e.IdRecepcion);
+            entity.ToTable("Recepcion");
+            entity.Property(e => e.IdRecepcion).HasColumnName("idRecepcion");
+            entity.Property(e => e.IdPedido).HasColumnName("idPedido");
+            entity.Property(e => e.IdGuiaDespacho).HasColumnName("idGuiaDespacho");
+            entity.Property(e => e.IdEmpleadoReceptor).HasColumnName("idEmpleadoReceptor");
+            entity.Property(e => e.CantidadRecibida).HasColumnName("cantidadRecibida");
+            entity.Property(e => e.Conformidad).HasColumnName("conformidad");
+            entity.Property(e => e.FechaRecepcion).HasColumnName("fechaRecepcion");
+
+            entity.HasOne<Pedido>().WithMany().HasForeignKey(e => e.IdPedido);
+            entity.HasOne<GuiaDespacho>().WithMany().HasForeignKey(e => e.IdGuiaDespacho);
+            entity.HasOne<Empleado>().WithMany().HasForeignKey(e => e.IdEmpleadoReceptor);
+        });
+
+
+
+
 
 
 

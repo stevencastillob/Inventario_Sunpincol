@@ -1,0 +1,65 @@
+﻿@{
+    ViewData["Title"] = "Registro de despachos";
+}
+
+<h2>Pedidos aprobados para despacho</h2>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-info">
+        @TempData["Mensaje"]
+    </div>
+}
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">
+        @ViewBag.Error
+    </div>
+}
+else
+{
+    @if (ViewBag.Pedidos.Count == 0)
+    {
+        <div class="alert alert-info">
+            No hay pedidos aprobados pendientes de despacho.
+        </div>
+    }
+    else
+    {
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Pedido</th>
+                    <th>Sede destino</th>
+                    <th>Producto</th>
+                    <th>Cantidad solicitada</th>
+                    <th>Fecha de solicitud</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ViewBag.Pedidos)
+                {
+                    <tr>
+                        <td>@item.Pedido.IdPedido</td>
+                        <td>@item.Sede</td>
+                        <td>@item.Producto</td>
+                        <td>@item.Pedido.CantidadSolicitada</td>
+                        <td>@item.Pedido.FechaSolicitud.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            <form asp-controller="Pedidos" asp-action="RegistrarDespacho" method="post">
+                                <input type="hidden" name="idPedido" value="@item.Pedido.IdPedido" />
+                                <input type="hidden" name="idBodeguero" value="@ViewBag.IdBodeguero" />
+
+                                <button type="submit" class="btn btn-primary btn-sm">
+                                    Registrar despacho
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}

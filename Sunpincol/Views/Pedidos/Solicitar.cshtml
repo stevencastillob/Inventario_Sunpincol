@@ -1,0 +1,48 @@
+﻿
+@{
+    ViewData["Title"] = "Solicitar pedido";
+}
+
+<h2>Solicitar pedido</h2>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}
+
+<form asp-controller="Pedidos" asp-action="RegistrarSolicitud" method="post">
+
+    <div class="mb-3">
+        <label class="form-label">Empleado solicitante</label>
+        <select name="idEmpleadoSolicitante" class="form-select" required>
+            <option value="">Seleccione un empleado</option>
+            @foreach (var empleado in ViewBag.Empleados)
+            {
+                <option value="@empleado.IdEmpleado">
+                    @empleado.IdEmpleado - @empleado.Cargo
+                </option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Producto</label>
+        <select name="codigoProducto" class="form-select" required>
+            <option value="">Seleccione un producto</option>
+            @foreach (var producto in ViewBag.Productos)
+            {
+                <option value="@producto.CodigoProducto">
+                    @producto.NombreProducto
+                </option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Cantidad solicitada</label>
+        <input type="number" name="cantidadSolicitada" class="form-control" min="1" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Confirmar solicitud</button>
+
+</form>

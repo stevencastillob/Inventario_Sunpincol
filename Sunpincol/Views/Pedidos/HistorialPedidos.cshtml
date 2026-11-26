@@ -1,0 +1,62 @@
+﻿@{
+    ViewData["Title"] = "Historial de pedidos";
+}
+
+<h2>Historial de pedidos realizados</h2>
+
+<form asp-controller="Pedidos" asp-action="HistorialPedidos" method="get" class="mb-3">
+    <label class="form-label">Seleccionar sede</label>
+
+    <select name="idSede" class="form-select" onchange="this.form.submit()">
+        @foreach (var sede in ViewBag.Sedes)
+        {
+            if (sede.IdSede == ViewBag.IdSede)
+            {
+                <option value="@sede.IdSede" selected>
+                    @sede.NombreSede
+                </option>
+            }
+            else
+            {
+                <option value="@sede.IdSede">
+                    @sede.NombreSede
+                </option>
+            }
+        }
+    </select>
+</form>
+
+@if (ViewBag.Pedidos.Count == 0)
+{
+    <div class="alert alert-info">
+        Esta sede no tiene pedidos registrados en el historial.
+    </div>
+}
+else
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Número de pedido</th>
+                <th>Producto</th>
+                <th>Empleado solicitante</th>
+                <th>Cantidad</th>
+                <th>Estado</th>
+                <th>Fecha de solicitud</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ViewBag.Pedidos)
+            {
+                <tr>
+                    <td>@item.Pedido.IdPedido</td>
+                    <td>@item.Producto</td>
+                    <td>@item.Empleado</td>
+                    <td>@item.Pedido.CantidadSolicitada</td>
+                    <td>@item.Pedido.EstadoPedido</td>
+                    <td>@item.Pedido.FechaSolicitud.ToString("dd/MM/yyyy HH:mm")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

@@ -1,0 +1,31 @@
+﻿
+@model Pedido
+
+@{
+    ViewData["Title"] = "Comprobante de pedido";
+}
+
+<h2>Comprobante de solicitud</h2>
+
+<div class="card">
+    <div class="card-body">
+
+        <h5 class="card-title">Pedido #@Model.IdPedido</h5>
+
+        <p><strong>Empleado:</strong> @ViewBag.Empleado.Cargo</p>
+        <p><strong>Sede:</strong> @ViewBag.Sede.NombreSede</p>
+        <p><strong>Producto:</strong> @ViewBag.Producto.NombreProducto</p>
+        <p><strong>Cantidad solicitada:</strong> @Model.CantidadSolicitada</p>
+        <p><strong>Fecha:</strong> @Model.FechaSolicitud.ToString("dd/MM/yyyy HH:mm")</p>
+        <p><strong>Estado:</strong> @Model.EstadoPedido</p>
+
+        <div class="alert alert-success">
+            La solicitud fue registrada correctamente.
+        </div>
+
+        <a asp-controller="Pedidos" asp-action="Solicitar" class="btn btn-primary">
+            Nueva solicitud
+        </a>
+
+    </div>
+</div>
